@@ -1,32 +1,32 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.ensemble import RandomForestClassifier
 import joblib
 
-# Load the trained Random Forest classifier
-best_rf_classifier = joblib.load('best_rf_classifier.pkl')
+# Load your test dataset
+test_df = pd.read_csv(
+    r"C:\Users\lalit\OneDrive\Desktop\DTL\final\heart_rate.csv")  # Replace with the path to your test dataset
 
-# Load the label encoder and standard scaler used during training
-label_encoder = joblib.load('label_encoder.pkl')
+# Load the saved scaler, label encoder, and trained model
 scaler = joblib.load('scaler.pkl')
+label_encoder = joblib.load('label_encoder.pkl')
+best_rf_classifier = joblib.load('best_rf_classifier.pkl')  # Load the trained model
 
-# Define a function to make predictions
-def predict_emotion(heart_rate):
-    # Scale the input heart rate using the same scaler used during training
-    heart_rate = scaler.transform(np.array(heart_rate).reshape(-1, 1))
+while True:
+    try:
+        # Enter pulse rate value in the terminal
+        pulse_rate = float(input("Enter Pulse Rate (or 'q' to quit): "))
 
-    # Make predictions
-    predicted_label = best_rf_classifier.predict(heart_rate)
+        if pulse_rate == 'q':
+            break
 
-    # Inverse transform the predicted label to get the emotion
-    predicted_emotion = label_encoder.inverse_transform(predicted_label)
+        # Preprocess the entered pulse rate
+        pulse_rate_input = np.array([[pulse_rate]])
+        pulse_rate_input = scaler.transform(pulse_rate_input)
 
-    return predicted_emotion[0]
+        # Predict the emotion based on the entered pulse rate
+        emotion_label = label_encoder.inverse_transform(best_rf_classifier.predict(pulse_rate_input))
 
-# Example usage:
-# Replace `heart_rate_input` with your actual heart rate input
-heart_rate_input = [70]  # Example heart rate input
+        print(f'Predicted Emotion: {emotion_label[0]}')
 
-predicted_emotion = predict_emotion(heart_rate_input)
-print("Predicted Emotion:", predicted_emotion)
+    except ValueError:
+        print("Invalid input. Please enter a numeric pulse rate value or 'q' to quit.")

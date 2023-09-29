@@ -3,12 +3,12 @@ import subprocess
 
 # Set the page title and icon
 st.set_page_config(
-    page_title="Program Output Display",
+    page_title="Emotion Recognition using sensors",
     page_icon="📊",
 )
 
 # Title and description
-st.title("Program Output Display")
+st.title("Emotion Display")
 st.write("This app displays the output of three external programs.")
 
 
@@ -33,9 +33,9 @@ st.subheader("Output of Program 1")
 st.markdown(f"**Output:**\n```python\n{output1}\n```")
 
 # Apply custom CSS styling
-st.subheader("Output of Program 2")
+st.subheader("Emotion displayed")
 st.markdown(f"<div style='color: blue; background-color: lightgray; padding: 10px;'>{output2}</div>", unsafe_allow_html=True)
 
 # Apply code syntax highlighting
-st.subheader("Output of Program 3")
+st.subheader("Stress Level from Temperature reading")
 st.code(output3, language='python')
