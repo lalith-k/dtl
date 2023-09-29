@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import accuracy_score
 
 # Load your dataset
-df = pd.read_csv(r"C:\Users\lalit\OneDrive\Desktop\DTL\final\heart_rate_emotion_dataset.csv\heart_rate_emotion_dataset.csv")
+df = pd.read_csv(r"C:\Users\lalit\OneDrive\Desktop\DTL\final\heart_rate.csv")
 
 # Assuming your CSV file has columns 'HeartRate' for features and 'Emotion' for labels
 X_features = df['HeartRate'].values
