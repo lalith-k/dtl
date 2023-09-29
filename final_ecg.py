@@ -13,6 +13,8 @@ data_dir = r"C:\Users\lalit\OneDrive\Desktop\DTL\young_adult_ecg\ECG_GSR_Emotion
 stimulus_desc_path = r"C:\Users\lalit\OneDrive\Desktop\DTL\young_adult_ecg\ECG_GSR_Emotions\Stimulus_Description.xlsx"
 
 # Load Stimulus_Description.xlsx and save it as a custom CSV
+
+
 def process_excel_to_csv(input_path, output_csv=None, rename_columns=None, new_columns=None):
     df = pd.read_excel(input_path)
     if rename_columns:
@@ -24,12 +26,15 @@ def process_excel_to_csv(input_path, output_csv=None, rename_columns=None, new_c
         df.to_csv(output_csv, index=None, header=True)
     return df
 
+
 custom_stimulus_desc_csv_path = r"C:\Users\lalit\OneDrive\Desktop\DTL\young_adult_ecg\ECG_GSR_Emotions\Stimulus_Description.csv"
 
 stimulus_desc_file = process_excel_to_csv(
     stimulus_desc_path,
     custom_stimulus_desc_csv_path
 )
+
+
 
 # Load ECG data
 def load_ecg_data(data_path, arr_shape, merged_dataframe):
@@ -61,6 +66,7 @@ def load_ecg_data(data_path, arr_shape, merged_dataframe):
     return raw_data_arr
 
 # Define the array shape and initialize the data array
+
 arr_shape = 1000
 raw_data_arr = []
 

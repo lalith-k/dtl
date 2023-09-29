@@ -17,6 +17,8 @@ emotion_mapping = {
 
 }
 
+
+
 # Define a function to make predictions using the trained models
 def predict_emotion(input_data, is_multimodal=True):
     if is_multimodal:
@@ -33,6 +35,7 @@ def predict_emotion(input_data, is_multimodal=True):
     predicted_emotions = [emotion_mapping[label] for label in predictions]
 
     return predicted_emotions
+
 
 # Example usage:
 # Replace input_data with your actual input data
