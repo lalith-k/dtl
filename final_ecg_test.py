@@ -1,29 +1,30 @@
-import joblib
+import os
 import numpy as np
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+import pandas as pd
+from sklearn.model_selection import train_test_split, RandomizedSearchCV, GridSearchCV
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+from scipy.stats import randint
+import joblib
 
-# Load the trained models
-best_rf_model_multimodal = joblib.load('best_rf_model_multimodal.pkl')
-best_rf_model_singlemodal = joblib.load('best_rf_model_singlemodal.pkl')
+# Define data directory and paths
+data_dir = r"C:\Users\lalit\OneDrive\Desktop\DTL\young_adult_ecg\ECG_GSR_Emotions\Raw Data"
+stimulus_desc_path = r"C:\Users\lalit\OneDrive\Desktop\DTL\young_adult_ecg\ECG_GSR_Emotions\Stimulus_Description.xlsx"
 
-# Load the label encoder
-label_encoder = LabelEncoder()
+# ... (rest of your training code remains the same)
 
-# Define a function to make predictions
+# Define a function to make predictions using the trained models
 def predict_emotion(input_data, is_multimodal=True):
-    # Load the StandardScaler separately for each model
+    # Load the trained models
     if is_multimodal:
-        scaler = joblib.load('best_rf_model_multimodal.pkl')  # Load the scaler trained for multimodal data
-        model = best_rf_model_multimodal
+        best_rf_model = best_rf_estimator_multimodal
     else:
-        scaler = joblib.load('best_rf_model_singlemodal.pkl')  # Load the scaler trained for single-modal data
-        model = best_rf_model_singlemodal
+        best_rf_model = best_rf_estimator_singlemodal
 
-    # Scale the input data
-    input_data = scaler.transform(input_data)
-
-    # Make predictions
-    predictions = model.predict(input_data)
+    # Perform data preprocessing
+    input_data = sc.transform(input_data)  # Scale the input data
+    predictions = best_rf_model.predict(input_data)
 
     # Inverse transform the predictions to get emotion labels
     predicted_emotions = label_encoder.inverse_transform(predictions)
@@ -31,10 +32,15 @@ def predict_emotion(input_data, is_multimodal=True):
     return predicted_emotions
 
 # Example usage:
-# Replace `input_data` with your actual input data
-
+# Replace input_data with your actual input data
 input_data = np.random.rand(1, 1000)  # Example input data with the same shape as your ECG data
 is_multimodal_input = True  # Set to True if using multimodal model, False for single-modal
 
 predicted_emotion = predict_emotion(input_data, is_multimodal_input)
 print("Predicted Emotion:", predicted_emotion[0])
+
+# Save the best Random Forest models for multimodal and single-modal data
+joblib.dump(best_rf_estimator_multimodal, 'best_rf_model_multimodal.pkl')
+joblib.dump(best_rf_estimator_singlemodal, 'best_rf_model_singlemodal.pkl')
+
+print("Models saved successfully.")

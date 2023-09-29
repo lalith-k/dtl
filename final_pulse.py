@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import accuracy_score
+import joblib
 
 # Load your dataset
 df = pd.read_csv(r"C:\Users\lalit\OneDrive\Desktop\DTL\final\heart_rate.csv")
@@ -22,22 +23,22 @@ y_labels = label_encoder.fit_transform(y_labels)
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
 
-# Define an expanded hyperparameter grid to search over
+# Define a reduced hyperparameter grid to search over
 param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [10, 20, 30],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-    'bootstrap': [True, False],
+    'n_estimators': [50, 100],
+    'max_depth': [10, 20],
+    'min_samples_split': [2, 5],
+    'min_samples_leaf': [1, 2],
+    'bootstrap': [True],
     'criterion': ['gini', 'entropy']
 }
 
 # Create a Random Forest classifier
 rf_classifier = RandomForestClassifier(random_state=42, class_weight='balanced')
 
-# Perform GridSearchCV for hyperparameter tuning with more iterations
+# Perform GridSearchCV for hyperparameter tuning with fewer iterations
 grid_search = GridSearchCV(estimator=rf_classifier, param_grid=param_grid,
-                           scoring='accuracy', cv=5, n_jobs=-1)
+                           scoring='accuracy', cv=3, n_jobs=-1)
 grid_search.fit(X_train, y_train)
 
 # Get the best hyperparameters from the grid search
@@ -51,3 +52,6 @@ best_rf_classifier.fit(X_train, y_train)
 y_pred = best_rf_classifier.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'Accuracy: {accuracy:.2f}')
+joblib.dump(scaler, 'scaler.pkl')
+joblib.dump(label_encoder, 'label_encoder.pkl')
+joblib.dump(best_rf_classifier, 'best_rf_classifier.pkl')
