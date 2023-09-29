@@ -1,12 +1,12 @@
 import os
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import train_test_split, RandomizedSearchCV, GridSearchCV
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier, GradientBoostingClassifier
-from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from scipy.stats import randint
+import joblib
 
 # Define data directory and paths
 data_dir = r"C:\Users\lalit\OneDrive\Desktop\DTL\young_adult_ecg\ECG_GSR_Emotions\Raw Data"
@@ -129,9 +129,11 @@ X_singlemodal = np.array(singlemodal_ecg_df['Raw Data'].tolist())
 y_singlemodal = np.array(singlemodal_ecg_df['Emotion'].tolist())
 
 # Perform data preprocessing
-sc = StandardScaler()
-X_multimodal = sc.fit_transform(X_multimodal)
-X_singlemodal = sc.fit_transform(X_singlemodal)
+sc_multimodal = StandardScaler()
+X_train_multimodal = sc_multimodal.fit_transform(X_multimodal)
+
+sc_singlemodal = StandardScaler()
+X_train_singlemodal = sc_singlemodal.fit_transform(X_singlemodal)
 
 # Encode labels
 label_encoder = LabelEncoder()
@@ -140,11 +142,11 @@ y_encoded_singlemodal = label_encoder.fit_transform(y_singlemodal)
 
 # Split the data into training and testing sets
 X_train_multimodal, X_test_multimodal, y_train_multimodal, y_test_multimodal = train_test_split(
-    X_multimodal, y_encoded_multimodal, test_size=0.2, random_state=42
+    X_train_multimodal, y_encoded_multimodal, test_size=0.2, random_state=42
 )
 
 X_train_singlemodal, X_test_singlemodal, y_train_singlemodal, y_test_singlemodal = train_test_split(
-    X_singlemodal, y_encoded_singlemodal, test_size=0.2, random_state=42
+    X_train_singlemodal, y_encoded_singlemodal, test_size=0.2, random_state=42
 )
 
 # Define parameter grid for RandomizedSearchCV
@@ -214,8 +216,6 @@ classification_report_singlemodal = classification_report(
 
 print("Classification Report for Multimodal ECG Data:\n", classification_report_multimodal)
 print("\nClassification Report for Single-Modal ECG Data:\n", classification_report_singlemodal)
-
-import joblib
 
 # Save the best Random Forest models for multimodal and single-modal data
 joblib.dump(best_rf_estimator_multimodal, 'best_rf_model_multimodal.pkl')
